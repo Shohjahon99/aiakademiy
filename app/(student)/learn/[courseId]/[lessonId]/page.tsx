@@ -32,7 +32,10 @@ export default async function LearnPage({ params }: Props) {
   })
   if (!course) notFound()
 
-  const currentLesson = await prisma.lesson.findUnique({ where: { id: lessonId } })
+  const [currentLesson, quizQuestions] = await Promise.all([
+    prisma.lesson.findUnique({ where: { id: lessonId } }),
+    prisma.quizQuestion.findMany({ where: { lessonId }, orderBy: { order: "asc" } }),
+  ])
   if (!currentLesson) notFound()
 
   const completedIds = new Set(enrollment.progresses.map((p) => p.lessonId))
@@ -102,6 +105,7 @@ export default async function LearnPage({ params }: Props) {
           nextLessonId={nextLesson?.id}
           courseId={courseId}
           isCompleted={completedIds.has(lessonId)}
+          quizQuestions={quizQuestions}
         />
       </div>
     </div>

@@ -1,12 +1,36 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { LessonDetailEditor } from "@/components/admin/LessonDetailEditor"
+import { CourseExamEditor } from "@/components/admin/CourseExamEditor"
 
 interface Category { id: string; name: string; icon: string }
 interface Instructor { id: string; name: string }
 interface Lesson { id: string; title: string; videoId: string | null; duration: number | null; order: number; isFree: boolean }
 interface Section { id: string; title: string; order: number; lessons: Lesson[] }
+
+// Lazy loader for lesson detail (fetches quiz & resources on demand)
+function LessonDetailLoader({ lessonId }: { lessonId: string }) {
+  const [data, setData] = useState<{ resources: unknown[]; questions: unknown[] } | null>(null)
+  useEffect(() => {
+    Promise.all([
+      fetch(`/api/admin/resources?lessonId=${lessonId}`).then((r) => r.json()),
+      fetch(`/api/admin/quiz?lessonId=${lessonId}`).then((r) => r.json()),
+    ]).then(([resources, questions]) => setData({ resources, questions }))
+  }, [lessonId])
+
+  if (!data) return <div style={{ padding: "12px 0", color: "#94A3B8", fontSize: "13px" }}>⏳ Yuklanmoqda...</div>
+  return (
+    <LessonDetailEditor
+      lessonId={lessonId}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      initialResources={data.resources as any}
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      initialQuestions={data.questions as any}
+    />
+  )
+}
 interface Course {
   id: string
   title: string
@@ -79,6 +103,7 @@ export function EditCourseForm({
   const [newSectionTitle, setNewSectionTitle] = useState("")
   const [addingSection, setAddingSection] = useState(false)
   const [newLesson, setNewLesson] = useState<Record<string, { title: string; videoId: string; duration: string; isFree: boolean }>>({})
+  const [expandedLesson, setExpandedLesson] = useState<string | null>(null)
 
   const handle = (k: string, v: string | boolean) => setForm((f) => ({ ...f, [k]: v }))
 
@@ -276,17 +301,32 @@ export function EditCourseForm({
               {section.lessons.length > 0 ? (
                 <div style={{ marginBottom: "12px" }}>
                   {section.lessons.map((lesson, li) => (
-                    <div key={lesson.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid var(--border)" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                        <span style={{ fontSize: "12px", color: "var(--text3)", fontWeight: 700, minWidth: "24px" }}>{li + 1}.</span>
-                        <span style={{ fontSize: "13.5px", color: "var(--dark)", fontWeight: 600 }}>{lesson.title}</span>
-                        {lesson.isFree && <span style={{ background: "#DCFCE7", color: "#15803D", padding: "2px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: 700 }}>Bepul</span>}
-                        {lesson.videoId && <span style={{ background: "#EEF2FF", color: "#4F46E5", padding: "2px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: 700 }}>▶ Video</span>}
-                        {lesson.duration && <span style={{ fontSize: "12px", color: "var(--text3)" }}>{lesson.duration} min</span>}
+                    <div key={lesson.id} style={{ borderBottom: "1px solid var(--border)" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 0" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px", flex: 1 }}>
+                          <span style={{ fontSize: "12px", color: "var(--text3)", fontWeight: 700, minWidth: "24px" }}>{li + 1}.</span>
+                          <span style={{ fontSize: "13.5px", color: "var(--dark)", fontWeight: 600 }}>{lesson.title}</span>
+                          {lesson.isFree && <span style={{ background: "#DCFCE7", color: "#15803D", padding: "2px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: 700 }}>Bepul</span>}
+                          {lesson.videoId && <span style={{ background: "#EEF2FF", color: "#4F46E5", padding: "2px 8px", borderRadius: "10px", fontSize: "11px", fontWeight: 700 }}>▶ Video</span>}
+                          {lesson.duration && <span style={{ fontSize: "12px", color: "var(--text3)" }}>{lesson.duration} min</span>}
+                        </div>
+                        <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+                          <button
+                            onClick={() => setExpandedLesson(expandedLesson === lesson.id ? null : lesson.id)}
+                            style={{ background: expandedLesson === lesson.id ? "#EEF2FF" : "var(--bg)", border: "1px solid var(--border)", color: "#4F46E5", cursor: "pointer", fontSize: "11.5px", fontWeight: 700, padding: "3px 10px", borderRadius: "6px" }}
+                          >
+                            {expandedLesson === lesson.id ? "▲ Yopish" : "▼ Test & Resurs"}
+                          </button>
+                          <button onClick={() => deleteLesson(section.id, lesson.id)} style={{ background: "none", border: "none", color: "#DC2626", cursor: "pointer", fontSize: "12px", fontWeight: 700 }}>
+                            ✕
+                          </button>
+                        </div>
                       </div>
-                      <button onClick={() => deleteLesson(section.id, lesson.id)} style={{ background: "none", border: "none", color: "#DC2626", cursor: "pointer", fontSize: "12px", fontWeight: 700 }}>
-                        ✕
-                      </button>
+                      {expandedLesson === lesson.id && (
+                        <div style={{ paddingBottom: "10px" }}>
+                          <LessonDetailLoader lessonId={lesson.id} />
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -356,6 +396,17 @@ export function EditCourseForm({
             {addingSection ? "..." : "+ Bo'lim qo'shish"}
           </button>
         </div>
+      </div>
+
+      {/* Final Course Exam */}
+      <div style={{ borderTop: "2px solid var(--border)", paddingTop: "32px", marginTop: "8px" }}>
+        <div style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif", fontSize: "20px", fontWeight: 900, color: "var(--dark)", marginBottom: "4px" }}>
+          Yakuniy kurs testi
+        </div>
+        <div style={{ fontSize: "13px", color: "var(--text2)", marginBottom: "16px" }}>
+          Barcha darslarni tugatgan talaba uchun yakuniy imtihon. O&apos;tsa — sertifikat beriladi.
+        </div>
+        <CourseExamEditor courseId={course.id} />
       </div>
     </div>
   )

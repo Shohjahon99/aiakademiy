@@ -8,6 +8,19 @@ async function checkAdmin() {
   return role === "ADMIN"
 }
 
+// GET: fetch quiz questions for a lesson
+export async function GET(req: NextRequest) {
+  if (!(await checkAdmin())) return NextResponse.json({ error: "Ruxsat yo'q" }, { status: 403 })
+  const { searchParams } = new URL(req.url)
+  const lessonId = searchParams.get("lessonId")
+  if (!lessonId) return NextResponse.json([])
+  const questions = await prisma.quizQuestion.findMany({
+    where: { lessonId },
+    orderBy: { order: "asc" },
+  })
+  return NextResponse.json(questions)
+}
+
 // POST: add quiz question
 export async function POST(req: NextRequest) {
   if (!(await checkAdmin())) return NextResponse.json({ error: "Ruxsat yo'q" }, { status: 403 })

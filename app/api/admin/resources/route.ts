@@ -8,6 +8,15 @@ async function checkAdmin() {
   return role === "ADMIN"
 }
 
+export async function GET(req: NextRequest) {
+  if (!(await checkAdmin())) return NextResponse.json({ error: "Ruxsat yo'q" }, { status: 403 })
+  const { searchParams } = new URL(req.url)
+  const lessonId = searchParams.get("lessonId")
+  if (!lessonId) return NextResponse.json([])
+  const resources = await prisma.lessonResource.findMany({ where: { lessonId } })
+  return NextResponse.json(resources)
+}
+
 export async function POST(req: NextRequest) {
   if (!(await checkAdmin())) return NextResponse.json({ error: "Ruxsat yo'q" }, { status: 403 })
   const { lessonId, title, url } = await req.json()
