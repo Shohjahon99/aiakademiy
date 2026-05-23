@@ -44,9 +44,10 @@ export default async function LearnPage({ params }: Props) {
   const nextLesson = allLessons[currentIndex + 1]
 
   return (
-    <div style={{ display: "flex", height: "calc(100vh - 64px)" }}>
+    <div className="r-learn-layout" style={{ display: "flex", height: "calc(100vh - 64px)" }}>
       {/* Sidebar */}
       <div
+        className="r-learn-sidebar"
         style={{
           width: "300px",
           flexShrink: 0,
@@ -98,7 +99,7 @@ export default async function LearnPage({ params }: Props) {
       </div>
 
       {/* Video player */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", background: "#0F172A", overflow: "hidden" }}>
+      <div className="r-learn-player" style={{ flex: 1, display: "flex", flexDirection: "column", background: "#0F172A", overflow: "hidden" }}>
         <LessonPlayer
           lesson={currentLesson}
           enrollmentId={enrollment.id}

@@ -31,7 +31,7 @@ const steps = [
 
 export function HowItWorks() {
   return (
-    <div style={{
+    <div className="r-px" style={{
       background: "linear-gradient(180deg, #fff 0%, var(--bg) 100%)",
       padding: "72px 48px",
     }}>
@@ -56,7 +56,7 @@ export function HowItWorks() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px", position: "relative" }}>
+        <div className="r-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "24px", position: "relative" }}>
           {/* Connector line */}
           <div style={{
             position: "absolute", top: "52px",

@@ -5,14 +5,14 @@ import { GraduationCap } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer style={{
+    <footer className="r-px" style={{
       background: "linear-gradient(180deg, #0D1B4B 0%, #0A1535 100%)",
       padding: "56px 48px 28px",
       color: "#94A3B8",
       borderTop: "1px solid rgba(255,255,255,0.06)",
     }}>
       <div style={{ maxWidth: "1140px", margin: "0 auto" }}>
-        <div style={{
+        <div className="r-footer-grid" style={{
           display: "grid",
           gridTemplateColumns: "2.2fr 1fr 1fr 1fr",
           gap: "48px",

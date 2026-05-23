@@ -4,7 +4,7 @@ export async function Testimonials() {
   const testimonials = await prisma.testimonial.findMany({ take: 3 })
 
   return (
-    <div style={{
+    <div className="r-px" style={{
       background: "linear-gradient(180deg, var(--bg) 0%, #fff 100%)",
       padding: "72px 48px",
     }}>
@@ -29,7 +29,7 @@ export async function Testimonials() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "22px" }}>
+        <div className="r-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "22px" }}>
           {testimonials.map((t) => (
             <div
               key={t.id}

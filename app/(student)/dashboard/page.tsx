@@ -23,7 +23,7 @@ export default async function DashboardPage() {
   })
 
   return (
-    <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "40px" }}>
+    <div className="r-px" style={{ maxWidth: "1100px", margin: "0 auto", padding: "40px" }}>
       <div style={{ marginBottom: "32px" }}>
         <div style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif", fontSize: "28px", fontWeight: 900, color: "var(--dark)" }}>
           Xush kelibsiz, {session.user.name?.split(" ")[0]}! 👋
@@ -31,7 +31,7 @@ export default async function DashboardPage() {
         <p style={{ color: "var(--text2)", marginTop: "8px" }}>O&apos;rganishni davom ettiring</p>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "16px", marginBottom: "40px" }}>
+      <div className="r-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "16px", marginBottom: "40px" }}>
         {[
           { icon: "📚", label: "Kurslar", value: enrollments.length },
           { icon: "✅", label: "Tugatilgan", value: enrollments.filter((e) => e.completedAt).length },

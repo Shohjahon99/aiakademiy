@@ -51,7 +51,7 @@ export default async function CoursesPage({ searchParams }: Props) {
         background: "linear-gradient(135deg, #0D1B4B 0%, #1E3A8A 60%, #2563EB 100%)",
         padding: "44px 0 40px",
       }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 40px" }}>
+        <div className="r-px" style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 40px" }}>
           <div style={{ marginBottom: "20px" }}>
             <div style={{
               fontFamily: "var(--font-raleway), Raleway, sans-serif",
@@ -103,11 +103,11 @@ export default async function CoursesPage({ searchParams }: Props) {
       </div>
 
       <main style={{ background: "#F0F7FF", minHeight: "70vh" }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 40px 60px" }}>
-          <div style={{ display: "flex", gap: "24px", alignItems: "flex-start" }}>
+        <div className="r-px" style={{ maxWidth: "1100px", margin: "0 auto", padding: "32px 40px 60px" }}>
+          <div className="r-courses-layout" style={{ display: "flex", gap: "24px", alignItems: "flex-start" }}>
 
             {/* Sidebar */}
-            <div style={{ width: "230px", flexShrink: 0, position: "sticky", top: "20px" }}>
+            <div className="r-sidebar" style={{ width: "230px", flexShrink: 0, position: "sticky", top: "20px" }}>
               <div style={{ background: "#fff", border: "1px solid #DBEAFE", borderRadius: "16px", overflow: "hidden", boxShadow: "0 2px 12px rgba(37,99,235,0.07)" }}>
 
                 {/* Kategoriyalar */}
@@ -253,7 +253,7 @@ export default async function CoursesPage({ searchParams }: Props) {
                   </a>
                 </div>
               ) : (
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "18px" }}>
+                <div className="r-courses-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "18px" }}>
                   {courses.map((course) => (
                     <CourseCard
                       key={course.id}

@@ -11,9 +11,9 @@ export async function PopularCourses() {
   })
 
   return (
-    <div style={{ padding: "64px 48px", background: "var(--bg)" }}>
+    <div className="r-px" style={{ padding: "64px 48px", background: "var(--bg)" }}>
       <div style={{ maxWidth: "1140px", margin: "0 auto" }}>
-        <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "36px" }}>
+        <div className="r-col-start" style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", marginBottom: "36px" }}>
           <div>
             <div style={{
               display: "inline-block",
@@ -48,7 +48,7 @@ export async function PopularCourses() {
           </Link>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "22px" }}>
+        <div className="r-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "22px" }}>
           {courses.map((course) => (
             <CourseCard
               key={course.id}

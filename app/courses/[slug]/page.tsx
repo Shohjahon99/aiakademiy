@@ -44,8 +44,8 @@ export default async function CourseDetailPage({ params }: Props) {
       <Navbar />
       <main>
         {/* Hero */}
-        <div style={{ background: "var(--dark)", padding: "48px 40px" }}>
-          <div style={{ maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 400px", gap: "48px", alignItems: "start" }}>
+        <div className="r-px" style={{ background: "var(--dark)", padding: "48px 40px" }}>
+          <div className="r-grid-course" style={{ maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr 400px", gap: "48px", alignItems: "start" }}>
             <div>
               <div style={{ fontSize: "12px", fontWeight: 700, color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "12px" }}>
                 {course.category.icon} {course.category.name}
@@ -118,8 +118,8 @@ export default async function CourseDetailPage({ params }: Props) {
         </div>
 
         {/* Course content */}
-        <div style={{ maxWidth: "1100px", margin: "0 auto", padding: "48px 40px" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: "48px" }}>
+        <div className="r-px" style={{ maxWidth: "1100px", margin: "0 auto", padding: "48px 40px" }}>
+          <div className="r-grid-course" style={{ display: "grid", gridTemplateColumns: "1fr 400px", gap: "48px" }}>
             <div>
               <h2 style={{ fontFamily: "var(--font-raleway), Raleway, sans-serif", fontSize: "24px", fontWeight: 900, color: "var(--dark)", marginBottom: "24px" }}>
                 O&apos;quv dasturi

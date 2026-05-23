@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   description:
     "Bugalteriya, Sun'iy intellekt, IT, Marketing va 50+ yo'nalishda professional sertifikatli kurslar. O'z tezligingizda o'rganing.",
   keywords: "online kurslar, bugalteriya, AI, dasturlash, 1C, Python, uzbekistan",
+  viewport: "width=device-width, initial-scale=1",
 }
 
 export default function RootLayout({

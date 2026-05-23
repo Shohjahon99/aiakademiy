@@ -7,7 +7,7 @@ export async function Categories() {
   })
 
   return (
-    <div style={{ padding: "72px 48px 40px", background: "#fff" }}>
+    <div className="r-px" style={{ padding: "72px 48px 40px", background: "#fff" }}>
       <div style={{ maxWidth: "1140px", margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: "48px" }}>
           <div style={{
@@ -34,7 +34,7 @@ export async function Categories() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
+        <div className="r-grid-4" style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px" }}>
           {categories.map((cat) => (
             <CategoryCard
               key={cat.id}

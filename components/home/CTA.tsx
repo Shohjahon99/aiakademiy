@@ -4,7 +4,7 @@ import Link from "next/link"
 
 export function CTA() {
   return (
-    <div style={{
+    <div className="r-px" style={{
       background: "linear-gradient(145deg, #0D1B4B 0%, #112266 50%, #2563EB 100%)",
       padding: "80px 48px",
       position: "relative",

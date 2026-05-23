@@ -22,6 +22,7 @@ export function Hero() {
 
   return (
     <div
+      className="r-hero"
       style={{
         background: "linear-gradient(145deg, #0D1B4B 0%, #0F2460 30%, #1E3A8A 65%, #2563EB 100%)",
         padding: "90px 48px 80px",
@@ -70,7 +71,7 @@ export function Hero() {
         </div>
 
         {/* Heading */}
-        <h1 style={{
+        <h1 className="r-hero-title" style={{
           fontFamily: "var(--font-raleway), Raleway, sans-serif",
           fontSize: "clamp(36px, 5.5vw, 58px)",
           fontWeight: 900,
@@ -103,7 +104,7 @@ export function Hero() {
 
         {/* Search */}
         <form onSubmit={handleSearch}>
-          <div style={{
+          <div className="r-search-bar" style={{
             display: "flex",
             background: "rgba(255,255,255,0.97)",
             borderRadius: "var(--radius)",
@@ -126,6 +127,7 @@ export function Hero() {
             />
             <button
               type="submit"
+              className="r-search-btn"
               style={{
                 background: "linear-gradient(135deg, #2563EB, #1D4ED8)",
                 color: "#fff", border: "none",
@@ -172,7 +174,7 @@ export function Hero() {
         </div>
 
         {/* Stats */}
-        <div style={{
+        <div className="r-stats" style={{
           display: "flex", justifyContent: "center", gap: "0",
           background: "rgba(255,255,255,0.06)",
           border: "1px solid rgba(255,255,255,0.12)",
