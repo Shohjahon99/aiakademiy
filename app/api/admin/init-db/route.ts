@@ -15,18 +15,29 @@ export async function POST(req: Request) {
 
   const results: string[] = []
 
+  // 0. DB connection test
+  try {
+    await prisma.$queryRaw`SELECT 1`
+    results.push("✅ DB ulanish muvaffaqiyatli")
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e)
+    results.push(`❌ DB ulanish XATO: ${msg}`)
+    return NextResponse.json({ success: false, results, error: "DB connection failed" }, { status: 500 })
+  }
+
   try {
     // 1. DB schema push
     results.push("Running prisma db push...")
-    execSync("npx prisma db push --accept-data-loss", {
-      stdio: "pipe",
-      timeout: 60000,
+    const output = execSync("npx prisma db push --accept-data-loss 2>&1", {
+      encoding: "utf8",
+      timeout: 90000,
       env: { ...process.env },
     })
-    results.push("✅ prisma db push muvaffaqiyatli")
+    results.push(`✅ prisma db push OK: ${output.substring(0, 300)}`)
   } catch (e: unknown) {
-    const msg = e instanceof Error ? e.message : String(e)
-    results.push(`⚠️ prisma db push xatosi: ${msg.substring(0, 200)}`)
+    const err = e as { message?: string; stderr?: string; stdout?: string }
+    const fullError = [err.stdout, err.stderr, err.message].filter(Boolean).join("\n")
+    results.push(`⚠️ prisma db push xatosi (to'liq):\n${fullError.substring(0, 800)}`)
     // Davom etamiz — balki jadvallar allaqachon bor
   }
 
