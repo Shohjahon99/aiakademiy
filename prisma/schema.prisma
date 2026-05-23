@@ -1,0 +1,234 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  phone     String?
+  role      String   @default("STUDENT")
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  enrollments  Enrollment[]
+  payments     Payment[]
+  testimonials Testimonial[]
+  instructor   Instructor?
+  examAttempts ExamAttempt[]
+}
+
+model Category {
+  id      String   @id @default(cuid())
+  name    String
+  slug    String   @unique
+  icon    String
+  color   String
+  courses Course[]
+}
+
+model Instructor {
+  id          String  @id @default(cuid())
+  name        String
+  bio         String?
+  avatar      String?
+  initials    String
+  role        String
+  rating      Float   @default(0)
+  avatarColor String  @default("#1A56DB")
+  userId      String? @unique
+  user        User?   @relation(fields: [userId], references: [id])
+  courses     Course[]
+}
+
+model Course {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String   @unique
+  description  String?
+  price        Int
+  oldPrice     Int?
+  thumbnail    String?
+  thumbEmoji   String?
+  thumbColor   String?
+  duration     Int?
+  level        String   @default("BEGINNER")
+  badge        String?
+  rating       Float    @default(0)
+  ratingCount  Int      @default(0)
+  studentCount Int      @default(0)
+  published    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  categoryId   String
+  category     Category   @relation(fields: [categoryId], references: [id])
+  instructorId String
+  instructor   Instructor @relation(fields: [instructorId], references: [id])
+
+  sections     Section[]
+  enrollments  Enrollment[]
+  payments     Payment[]
+  testimonials Testimonial[]
+  exam         CourseExam?
+}
+
+model Section {
+  id       String   @id @default(cuid())
+  title    String
+  order    Int
+  courseId String
+  course   Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons  Lesson[]
+}
+
+model Lesson {
+  id        String  @id @default(cuid())
+  title     String
+  videoId   String?
+  duration  Int?
+  order     Int
+  isFree    Boolean @default(false)
+  sectionId String
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  progresses     LessonProgress[]
+  quizQuestions  QuizQuestion[]
+  resources      LessonResource[]
+}
+
+model Enrollment {
+  id          String    @id @default(cuid())
+  userId      String
+  courseId    String
+  enrolledAt  DateTime  @default(now())
+  completedAt DateTime?
+
+  user        User      @relation(fields: [userId], references: [id])
+  course      Course    @relation(fields: [courseId], references: [id])
+  progresses  LessonProgress[]
+  certificate Certificate?
+
+  @@unique([userId, courseId])
+}
+
+model LessonProgress {
+  id           String     @id @default(cuid())
+  enrollmentId String
+  lessonId     String
+  completedAt  DateTime   @default(now())
+
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
+  lesson       Lesson     @relation(fields: [lessonId], references: [id])
+
+  @@unique([enrollmentId, lessonId])
+}
+
+model Certificate {
+  id           String     @id @default(cuid())
+  enrollmentId String     @unique
+  code         String     @unique @default(cuid())
+  issuedAt     DateTime   @default(now())
+
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id])
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  userId    String
+  courseId  String
+  amount    Int
+  method    String
+  status    String   @default("PENDING")
+  transId   String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  text      String
+  rating    Int      @default(5)
+  authorName String
+  authorRole String
+  initials  String
+  avatarColor String @default("#1A56DB")
+  createdAt DateTime @default(now())
+
+  userId    String?
+  courseId  String?
+  user      User?    @relation(fields: [userId], references: [id])
+  course    Course?  @relation(fields: [courseId], references: [id])
+}
+
+model SiteSettings {
+  id              String @id @default("settings")
+  clickServiceId  String @default("")
+  clickMerchantId String @default("")
+  clickSecretKey  String @default("")
+  paymeLogin      String @default("")
+  paymePassword   String @default("")
+  paymeMerchantId String @default("")
+}
+
+// --- Dars testi ---
+model QuizQuestion {
+  id       String @id @default(cuid())
+  lessonId String
+  question String
+  options  String // JSON: ["A","B","C","D"]
+  answer   Int    // 0-based correct option index
+  order    Int    @default(0)
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+}
+
+// --- Dars resurslari ---
+model LessonResource {
+  id       String @id @default(cuid())
+  lessonId String
+  title    String
+  url      String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+}
+
+// --- Yakuniy kurs testi ---
+model CourseExam {
+  id        String         @id @default(cuid())
+  courseId  String         @unique
+  title     String         @default("Yakuniy test")
+  passMark  Int            @default(70)
+  course    Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  questions ExamQuestion[]
+  attempts  ExamAttempt[]
+}
+
+model ExamQuestion {
+  id       String     @id @default(cuid())
+  examId   String
+  question String
+  options  String     // JSON
+  answer   Int
+  order    Int        @default(0)
+  exam     CourseExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+}
+
+model ExamAttempt {
+  id        String     @id @default(cuid())
+  userId    String
+  examId    String
+  courseId  String
+  score     Int
+  passed    Boolean
+  createdAt DateTime   @default(now())
+  user      User       @relation(fields: [userId], references: [id])
+  exam      CourseExam @relation(fields: [examId], references: [id])
+}
