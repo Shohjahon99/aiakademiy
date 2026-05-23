@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import { prisma } from "@/lib/prisma"
 import { AdminHeader, tH, tD } from "@/components/admin/AdminHeader"
 import { ToggleRoleButton } from "@/components/admin/ToggleRoleButton"

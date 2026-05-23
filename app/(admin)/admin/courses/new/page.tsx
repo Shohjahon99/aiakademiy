@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import { prisma } from "@/lib/prisma"
 import { AdminHeader, adminBtn } from "@/components/admin/AdminHeader"
 import { NewCourseForm } from "@/components/admin/NewCourseForm"
