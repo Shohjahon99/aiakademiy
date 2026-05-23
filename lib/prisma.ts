@@ -1,4 +1,4 @@
-import { PrismaLibSql } from "@prisma/adapter-libsql"
+import { PrismaPg } from "@prisma/adapter-pg"
 import { PrismaClient } from "@/app/generated/prisma/client"
 
 const globalForPrisma = globalThis as unknown as {
@@ -6,12 +6,8 @@ const globalForPrisma = globalThis as unknown as {
 }
 
 function createPrismaClient() {
-  const url = process.env.DATABASE_URL!
-  const authToken = process.env.DATABASE_AUTH_TOKEN // Turso uchun kerak, local SQLite uchun emas
-
-  const adapter = new PrismaLibSql(
-    authToken ? { url, authToken } : { url }
-  )
+  const connectionString = process.env.DATABASE_URL!
+  const adapter = new PrismaPg({ connectionString })
   return new PrismaClient({ adapter })
 }
 
