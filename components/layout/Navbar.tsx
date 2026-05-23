@@ -176,8 +176,9 @@ export function Navbar() {
           onClick={() => setMenuOpen(!menuOpen)}
           style={{
             display: "none",
+            marginLeft: "auto",
             background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)",
-            color: "#fff", width: "38px", height: "38px", borderRadius: "8px",
+            color: "#fff", width: "40px", height: "40px", borderRadius: "8px",
             alignItems: "center", justifyContent: "center", cursor: "pointer",
             flexShrink: 0,
           }}
