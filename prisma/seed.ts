@@ -1,10 +1,10 @@
 import "dotenv/config"
-import { PrismaLibSql } from "@prisma/adapter-libsql"
+import { PrismaPg } from "@prisma/adapter-pg"
 import { PrismaClient } from "../app/generated/prisma/client"
 import { hash } from "bcryptjs"
 
-const dbUrl = process.env.DATABASE_URL || "file:dev.db"
-const adapter = new PrismaLibSql({ url: dbUrl })
+const connectionString = process.env.DATABASE_URL!
+const adapter = new PrismaPg({ connectionString })
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
